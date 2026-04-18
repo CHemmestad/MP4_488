@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include "filter.h"
 
-//488 TODO hard code default PID constants found from Lab_Part_1
-
 #define PID_ROLL_RATE_KP  100.0
 #define PID_ROLL_RATE_KI  0.0
 #define PID_ROLL_RATE_KD  10.0
@@ -44,16 +42,20 @@
 
 typedef struct
 {
-  // 488 TODO write PidObject struct
-  // needs all values that will be used for PID calculations
-  // error, kp, ki, kd, setpoint ...
-  stab_mode_t mode;
   float error;
+  float prevError;
+  float integ;
+  float deriv;
   float kp;
   float ki;
   float kd;
   float dt;
   float setpoint;
+  float iLimit;
+  float outputLimit;
+  float outP;
+  float outI;
+  float outD;
 
   lpf2pData dFilter;  //< filter for D term
   bool enableDFilter; //< filter for D term enable flag
