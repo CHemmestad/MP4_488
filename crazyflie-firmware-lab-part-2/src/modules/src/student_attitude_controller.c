@@ -140,7 +140,7 @@ void studentAttitudeControllerCorrectAttitudePID(
   *rollRateDesired = studentPidUpdate(&pidRoll, eulerRollActual, true);
   *pitchRateDesired = studentPidUpdate(&pidPitch, eulerPitchActual, true);
 
-  float yawError = eulerYawDesired - eulerYawActual;
+  float yawError = eulerYawActual - eulerYawDesired;
   while (yawError > 180.0f) {
     yawError -= 360.0f;
   }
