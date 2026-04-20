@@ -178,7 +178,7 @@ void studentAttitudeControllerCorrectRatePID(
 
   *rollCmd = saturateSignedInt16(studentPidUpdate(&pidRollRate, rollRateActual, true));
   *pitchCmd = saturateSignedInt16(studentPidUpdate(&pidPitchRate, pitchRateActual, true));
-  *yawCmd = saturateSignedInt16(studentPidUpdate(&pidYawRate, yawRateActual, true));
+  *yawCmd = saturateSignedInt16(studentPidUpdate(&pidYawRate, -yawRateActual, true));
 
 }
 
