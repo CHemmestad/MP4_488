@@ -91,6 +91,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
       fabsf(setpoint->attitude.yaw) >= 0.001f) {
     yawRateSetpoint = setpoint->attitude.yaw;
   }
+  yawRateSetpoint = -yawRateSetpoint;
 
   const float yawActual = -state->attitude.yaw;
 
@@ -115,7 +116,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
       }
       attitudeDesired.yaw = capAngle(attitudeDesired.yaw + yawRateSetpoint * STUDENT_UPDATE_DT);
     } else {
-      attitudeDesired.yaw = capAngle(setpoint->attitude.yaw);
+      attitudeDesired.yaw = capAngle(-setpoint->attitude.yaw);
     }
     yawWasRateMode = (setpoint->mode.yaw == modeVelocity);
 
