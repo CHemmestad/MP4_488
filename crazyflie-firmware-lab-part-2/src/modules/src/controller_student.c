@@ -33,6 +33,7 @@ static float accelz;
 //Dummy variables for test stand
 static float angle;
 static float rate;
+static bool yawWasRateMode;
 
 void controllerStudentInit(void)
 {
@@ -100,10 +101,14 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
     }
 
     if (setpoint->mode.yaw == modeVelocity) {
+      if (!yawWasRateMode) {
+        attitudeDesired.yaw = capAngle(state->attitude.yaw);
+      }
       attitudeDesired.yaw = capAngle(attitudeDesired.yaw + setpoint->attitudeRate.yaw * STUDENT_UPDATE_DT);
     } else {
       attitudeDesired.yaw = capAngle(setpoint->attitude.yaw);
     }
+    yawWasRateMode = (setpoint->mode.yaw == modeVelocity);
 
     attitudeDesired.roll = capAngle(setpoint->attitude.roll);
     attitudeDesired.pitch = capAngle(setpoint->attitude.pitch);
@@ -143,6 +148,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
     control->pitch = 0;
     control->yaw = 0;
     thrustDesired = 0.0f;
+    yawWasRateMode = false;
     studentAttitudeControllerResetAllPID();
   }
 

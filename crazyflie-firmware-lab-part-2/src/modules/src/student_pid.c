@@ -59,10 +59,6 @@ float studentPidUpdate(PidObject* pid, const float measured, const bool updateEr
     studentPidSetError(pid, pid->setpoint - measured);
   }
 
-  if (fabsf(pid->error) < UPDATE_THRESHOLD) {
-    pid->error = 0.0f;
-  }
-
   pid->integ += pid->error * pid->dt;
   if (pid->iLimit != 0.0f) {
     pid->integ = constrain(pid->integ, -pid->iLimit, pid->iLimit);

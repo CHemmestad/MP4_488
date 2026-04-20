@@ -38,8 +38,6 @@
 #define DEFAULT_PID_INTEGRATION_LIMIT 5000.0
 #define DEFAULT_PID_OUTPUT_LIMIT      0.0
 
-#define UPDATE_THRESHOLD 1 // arbitrary 1 because idk what to put yet
-
 typedef struct
 {
   float error;
