@@ -106,7 +106,8 @@ static void extRxDecodeChannels(void)
   extrxSetpoint.thrust = cppmConvert2uint16(ch[EXTRX_CH_TRUST]);
   extrxSetpoint.attitude.roll = EXTRX_SIGN_ROLL * cppmConvert2Float(ch[EXTRX_CH_ROLL], -EXTRX_SCALE_ROLL, EXTRX_SCALE_ROLL);
   extrxSetpoint.attitude.pitch = EXTRX_SIGN_PITCH * cppmConvert2Float(ch[EXTRX_CH_PITCH], -EXTRX_SCALE_PITCH, EXTRX_SCALE_PITCH);
-  extrxSetpoint.attitude.yaw = EXTRX_SIGN_YAW * cppmConvert2Float(ch[EXTRX_CH_YAW], -EXTRX_SCALE_YAW, EXTRX_SCALE_YAW);
+  extrxSetpoint.attitude.yaw = 0.0f;
+  extrxSetpoint.attitudeRate.yaw = EXTRX_SIGN_YAW * cppmConvert2Float(ch[EXTRX_CH_YAW], -EXTRX_SCALE_YAW, EXTRX_SCALE_YAW);
   commanderSetSetpoint(&extrxSetpoint, COMMANDER_PRIORITY_EXTRX);
 }
 
@@ -213,6 +214,6 @@ LOG_ADD(LOG_FLOAT, pitch, &extrxSetpoint.attitude.pitch)
 /**
  * @brief External RX channel converted to yaw
  */
-LOG_ADD(LOG_FLOAT, yaw, &extrxSetpoint.attitude.yaw)
+LOG_ADD(LOG_FLOAT, yaw, &extrxSetpoint.attitudeRate.yaw)
 LOG_GROUP_STOP(extrx)
 #endif
