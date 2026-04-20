@@ -11,7 +11,6 @@
 
 #include "param.h"
 #include "math3d.h"
-#include <math.h>
 
 //delta time between calls to the update function
 #define STUDENT_UPDATE_DT    (float)(1.0f/ATTITUDE_RATE)
@@ -86,12 +85,11 @@ static float capAngle(float angle) {
 void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorData_t *sensors, const state_t *state, const uint32_t tick)
 {
   float yawRateSetpoint = setpoint->attitudeRate.yaw;
-  if (setpoint->mode.yaw == modeVelocity) {
-    if (fabsf(setpoint->attitude.yaw) > fabsf(yawRateSetpoint)) {
-      yawRateSetpoint = setpoint->attitude.yaw;
-    }
+  if (setpoint->mode.yaw == modeVelocity &&
+      fabsf(yawRateSetpoint) < 0.001f &&
+      fabsf(setpoint->attitude.yaw) >= 0.001f) {
+    yawRateSetpoint = setpoint->attitude.yaw;
   }
-
   const float yawActual = state->attitude.yaw;
 
   // Main Controller Function
@@ -144,7 +142,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
     }
 
     studentAttitudeControllerCorrectRatePID(
-      sensors->gyro.x, sensors->gyro.y, -sensors->gyro.z,
+      sensors->gyro.x, sensors->gyro.y, sensors->gyro.z,
       rateDesired.roll, rateDesired.pitch, rateDesired.yaw,
       &control->roll, &control->pitch, &control->yaw);
   }
@@ -169,7 +167,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
   cmd_yaw = control->yaw;
   r_roll = sensors->gyro.x;
   r_pitch = sensors->gyro.y;
-  r_yaw = -sensors->gyro.z;
+  r_yaw = sensors->gyro.z;
   accelz = sensors->acc.z;
 }
 
