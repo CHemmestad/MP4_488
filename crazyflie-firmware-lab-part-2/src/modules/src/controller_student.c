@@ -84,12 +84,7 @@ static float capAngle(float angle) {
  */
 void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorData_t *sensors, const state_t *state, const uint32_t tick)
 {
-  float yawRateSetpoint = setpoint->attitudeRate.yaw;
-  if (setpoint->mode.yaw == modeVelocity &&
-      fabsf(yawRateSetpoint) < 0.001f &&
-      fabsf(setpoint->attitude.yaw) >= 0.001f) {
-    yawRateSetpoint = -setpoint->attitude.yaw;
-  }
+  const float yawRateSetpoint = setpoint->attitudeRate.yaw;
   const float yawActual = state->attitude.yaw;
 
   // Main Controller Function
