@@ -88,7 +88,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
   if (setpoint->mode.yaw == modeVelocity &&
       fabsf(yawRateSetpoint) < 0.001f &&
       fabsf(setpoint->attitude.yaw) >= 0.001f) {
-    yawRateSetpoint = setpoint->attitude.yaw;
+    yawRateSetpoint = -setpoint->attitude.yaw;
   }
   const float yawActual = state->attitude.yaw;
 
