@@ -11,6 +11,7 @@
 
 #include "param.h"
 #include "math3d.h"
+#include <math.h>
 
 //delta time between calls to the update function
 #define STUDENT_UPDATE_DT    (float)(1.0f/ATTITUDE_RATE)
@@ -84,6 +85,14 @@ static float capAngle(float angle) {
  */
 void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorData_t *sensors, const state_t *state, const uint32_t tick)
 {
+  float yawRateSetpoint = setpoint->attitudeRate.yaw;
+  if (setpoint->mode.yaw == modeVelocity &&
+      fabsf(yawRateSetpoint) < 0.001f &&
+      fabsf(setpoint->attitude.yaw) >= 0.001f) {
+    yawRateSetpoint = setpoint->attitude.yaw;
+  }
+
+  const float yawActual = -state->attitude.yaw;
 
   // Main Controller Function
 
@@ -102,9 +111,9 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
 
     if (setpoint->mode.yaw == modeVelocity) {
       if (!yawWasRateMode) {
-        attitudeDesired.yaw = capAngle(state->attitude.yaw);
+        attitudeDesired.yaw = capAngle(yawActual);
       }
-      attitudeDesired.yaw = capAngle(attitudeDesired.yaw + setpoint->attitudeRate.yaw * STUDENT_UPDATE_DT);
+      attitudeDesired.yaw = capAngle(attitudeDesired.yaw + yawRateSetpoint * STUDENT_UPDATE_DT);
     } else {
       attitudeDesired.yaw = capAngle(setpoint->attitude.yaw);
     }
@@ -115,7 +124,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
     thrustDesired = setpoint->thrust;
 
     studentAttitudeControllerCorrectAttitudePID(
-      state->attitude.roll, state->attitude.pitch, state->attitude.yaw,
+      state->attitude.roll, state->attitude.pitch, yawActual,
       attitudeDesired.roll, attitudeDesired.pitch, attitudeDesired.yaw,
       &rateDesired.roll, &rateDesired.pitch, &rateDesired.yaw);
 
@@ -130,7 +139,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
     }
 
     if (setpoint->mode.yaw == modeVelocity) {
-      rateDesired.yaw = setpoint->attitudeRate.yaw;
+      rateDesired.yaw = yawRateSetpoint;
       studentAttitudeControllerResetYawAttitudePID();
     }
 
