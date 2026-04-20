@@ -167,7 +167,7 @@ void controllerStudent(control_t *control, setpoint_t *setpoint, const sensorDat
   cmd_yaw = control->yaw;
   r_roll = sensors->gyro.x;
   r_pitch = sensors->gyro.y;
-  r_yaw = -sensors->gyro.z;
+  r_yaw = sensors->gyro.z;
   accelz = sensors->acc.z;
 }
 
